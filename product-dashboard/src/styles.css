@@ -1,0 +1,169 @@
+:root {
+  --sidebar-width: 260px;
+  --topnav-height: 56px;
+  --bg: #f8f9fa;
+}
+
+/* base layout */
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial;
+  background: var(--bg);
+}
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top nav uses bootstrap .navbar so we only ensure height consistency */
+.navbar {
+  height: var(--topnav-height);
+}
+
+/* d-flex helper exists in bootstrap, but we keep layout safe */
+.d-flex {
+  display: flex;
+}
+
+/* left sidebar (desktop: visible; mobile: slide-in) */
+.left-sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  max-width: var(--sidebar-width);
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+  transform: translateX(0);
+  transition: transform 220ms ease;
+  z-index: 1100;
+  background-color: rgb(104, 169, 238);
+}
+
+/* mobile behavior: hide and slide in */
+@media (max-width: 900px) {
+  .left-sidebar {
+    position: fixed;
+    left: 0;
+    top: var(--topnav-height);
+    height: calc(100vh - var(--topnav-height));
+    width: var(--sidebar-width);
+    transform: translateX(-110%); /* hidden by default */
+    transition: transform 220ms ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    z-index: 2100; /* must be above backdrop */
+  }
+
+  .left-sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  /* backdrop that dims the content when sidebar is open */
+  .left-sidebar-backdrop {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: var(--topnav-height);
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 2000; /* lower than sidebar but above content */
+  }
+}
+
+/* content area */
+.content {
+  flex-grow: 1;
+  padding-bottom: 24px;
+  min-height: calc(100vh - var(--topnav-height));
+  background: var(--bg);
+}
+
+/* small screens: ensure content is not hidden behind fixed sidebar */
+@media (max-width: 900px) {
+  .content {
+    padding-top: 16px;
+  }
+}
+
+/* Product card tweaks */
+.card.h-100 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.card img {
+  display: block;
+}
+.card .card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.card :hover{
+    background-color: rgb(229, 221, 221);
+}
+
+/* Modal (custom lightweight modal used by ProductModal.jsx) */
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+.modal-custom {
+  width: min(900px, 96%);
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* Sidebar filters section padding */
+.sidebar-filters {
+  padding-top: 8px;
+}
+
+/* utility tweaks */
+.p-4 {
+  padding: 1.5rem !important;
+}
+.text-center {
+  text-align: center;
+}
+
+/* small responsive tweaks for grid cards */
+@media (max-width: 576px) {
+  .card .card-body h6 {
+    font-size: 1rem;
+  }
+  .modal-custom {
+    padding: 14px;
+  }
+}
+
+/* accessibility focus outlines */
+button:focus,
+input:focus,
+select:focus {
+  outline: 3px solid rgba(13, 110, 253, 0.15);
+  outline-offset: 2px;
+}
+
+/* Prevent the backdrop from blocking the sidebar on desktop (just in case) */
+.left-sidebar-backdrop {
+  display: none;
+}
+@media (max-width: 900px) {
+  .left-sidebar-backdrop {
+    display: block;
+  }
+}
